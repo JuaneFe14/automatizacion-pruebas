@@ -1,0 +1,42 @@
+# Entorno de pruebas: inyecta variables de forma segura (Opción C)
+# Los tests se ejecutan en contenedor; el navegador E2E usa Chrome del host.
+services:
+  tests:
+    image: node:20-slim
+    working_dir: /app
+    volumes:
+      - .:/app                 # Monta el proyecto completo
+      - node_modules:/app/node_modules # Volume con nombre: persiste entre ejecuciones
+    environment:
+      # --- API REST (DummyJSON) ---
+      API_BASE_URL: ${API_BASE_URL:-https://dummyjson.com}
+      API_TIMEOUT_MS: ${API_TIMEOUT_MS:-10000}
+
+      # --- Formulario web (The Internet /login) ---
+      WEB_BASE_URL: ${WEB_BASE_URL:-https://the-internet.herokuapp.com}
+      WEB_LOAD_TIMEOUT_MS: ${WEB_LOAD_TIMEOUT_MS:-10000}
+
+      # --- Credenciales sintéticas del formulario ---
+      VALID_USERNAME: ${VALID_USERNAME:-tomsmith}
+      VALID_PASSWORD: ${VALID_PASSWORD:-SuperSecretPassword!}
+
+      # --- Ejecución ---
+      HEADLESS: ${HEADLESS:-true}
+      SCREENSHOTS_DIR: ${SCREENSHOTS_DIR:-./evidence/screenshots}
+
+      # --- Navegador remoto (servicio chrome de este mismo compose) ---
+      SELENIUM_REMOTE_URL: ${SELENIUM_REMOTE_URL:-http://chrome:4444/wd/hub}
+    depends_on:
+      - chrome
+    command: npm test
+
+  # Servidor Selenium con Chrome preinstalado (los tests nunca abren
+  # navegador en el host: todo vive en Docker → reproducible).
+  chrome:
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb            # Chrome se cae sin memoria compartida suficiente
+    ports:
+      - "4444:4444"          # noVNC: ver el navegador en vivo en http://localhost:4444/ui
+
+volumes:
+  node_modules:

@@ -1,0 +1,11 @@
+# Directivas del agente de OpenCode (no forma parte del entregable)
+AGENTS.md
+
+# Dependencias Node (instaladas dentro del volume node_modules del contenedor)
+node_modules/
+
+# Variables de entorno reales — NUNCA se commitean (usa .env.example como plantilla)
+.env
+
+# Logs
+*.log
