@@ -51,7 +51,7 @@ const withEvidence = (scenarioName, scenario) => async () => {
   } catch (error) {
     try {
       const evidencePath = await captureScreenshot(driver, scenarioName);
-      console.error(`📷 Evidencia del fallo: ${evidencePath}`);
+      console.error(`Evidencia del fallo: ${evidencePath}`);
     } catch {
       // Si ni siquiera hay navegador, no enmascaramos el error original.
     }

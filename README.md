@@ -1,12 +1,11 @@
-# Taller: Scripts de Pruebas Automatizadas — API REST y Formulario Web
-
-> **Estudiante:** Juan Quintero
+> **Estudiante:** Juan Felipe Quintero Gutierrez
 > **Fecha de ejecución:** 3 de noviembre de 2026
 > **Stack:** JavaScript (Node.js) · Axios · Selenium WebDriver · Jest · Docker
+> **PDF del informe:** *Taller_Scripts_Automatizados_JuanFelipeQuinteroGutierrez.pdf*
 
 ---
 
-## 1. Portada e introducción teórica
+## 1. Introducción
 
 La **automatización de pruebas** consiste en ejecutar de forma programática los mismos pasos que realizaría un usuario manual —o los consumos que haría un cliente de un servicio— verificando que el comportamiento observado coincida con lo esperado. A diferencia de la prueba manual, la automatización ofrece **repetibilidad, rapidez y retroalimentación temprana**: una misma suite puede ejecutarse decenas de veces sin costo adicional y con resultados deterministas.
 
@@ -79,9 +78,9 @@ const INVALID_CREDENTIALS = Object.freeze({
 | 4 | **Case-sensitivity** | `TOMSMITH` (mayúsculas) / contraseña válida | *"Your username is invalid!"* (el usuario distingue mayúsculas) |
 | 5 | Contraseña incorrecta | `tomsmith` / `clave_incorrecta_del_taller` | *"Your password is invalid!"* |
 
-### 3.4 Matriz de trazabilidad — criterios de evaluación (§6) → pruebas
+### 3.4 Matriz de trazabilidad — criterios de evaluación → pruebas
 
-**A. Pruebas de API REST (§6.A):**
+**A. Pruebas de API REST (criterio A):**
 
 | Criterio exigido | Prueba(s) que lo cubre(n) |
 |---|---|
@@ -94,7 +93,7 @@ const INVALID_CREDENTIALS = Object.freeze({
 | Escenario feliz (datos válidos) | Tests 1 y 3 |
 | Escenario negativo (datos inválidos) | Test 4 |
 
-**B. Pruebas de formulario web (§6.B):**
+**B. Pruebas de formulario web (criterio B):**
 
 | Criterio exigido | Prueba(s) que lo cubre(n) |
 |---|---|
@@ -361,7 +360,7 @@ const withEvidence = (scenarioName, scenario) => async () => {
   } catch (error) {
     try {
       const evidencePath = await captureScreenshot(driver, scenarioName);
-      console.error(`📷 Evidencia del fallo: ${evidencePath}`);
+      console.error(`Evidencia del fallo: ${evidencePath}`);
     } catch { /* sin navegador: no enmascaramos el error original */ }
     throw error;
   }
@@ -477,7 +476,7 @@ Cada escenario se documenta con **dos capturas**: los datos escritos en el formu
 |---|---|
 | **Datos usados** | Ninguno (solo abrir la página) |
 | **Esperado** | Formulario de login visible y operativo |
-| **Obtenido** | `#username` y `#password` presentes, botón habilitado ✅ |
+| **Obtenido** | `#username` y `#password` presentes, botón habilitado (OK) |
 
 ![Formulario de login en estado inicial](evidence/screenshots/01-formulario-login-vacio-estado-inicial_2026-11-03T22-48-42-305Z.png)
 
@@ -487,7 +486,7 @@ Cada escenario se documenta con **dos capturas**: los datos escritos en el formu
 |---|---|
 | **Datos usados** | `tomsmith` / `SuperSecretPassword!` |
 | **Esperado** | Flash *success* *"You logged into a secure area!"* y URL `/secure` |
-| **Obtenido** | Flash success + navegación a **Secure Area** ✅ |
+| **Obtenido** | Flash success + navegación a **Secure Area** (OK) |
 
 **Datos escritos en los inputs (antes de enviar):**
 
@@ -503,7 +502,7 @@ Cada escenario se documenta con **dos capturas**: los datos escritos en el formu
 |---|---|
 | **Datos usados** | `usuario_que_no_existe` / `SuperSecretPassword!` |
 | **Esperado** | Flash *error* *"Your username is invalid!"*, permanecer en `/login` |
-| **Obtenido** | Flash error con ese mensaje ✅ |
+| **Obtenido** | Flash error con ese mensaje (OK) |
 
 **Datos escritos en los inputs (antes de enviar):**
 
@@ -519,7 +518,7 @@ Cada escenario se documenta con **dos capturas**: los datos escritos en el formu
 |---|---|
 | **Datos usados** | `""` / `""` (ambos vacíos) |
 | **Esperado** | Rechazo con flash *error* *"Your username is invalid!"* |
-| **Obtenido** | Flash error con ese mensaje ✅ |
+| **Obtenido** | Flash error con ese mensaje (OK) |
 
 > No hay captura "antes": los campos vacíos son visualmente idénticos al estado inicial del Escenario 1.
 
@@ -531,7 +530,7 @@ Cada escenario se documenta con **dos capturas**: los datos escritos en el formu
 |---|---|
 | **Datos usados** | `TOMSMITH` / `SuperSecretPassword!` |
 | **Esperado** | Rechazo (el login distingue mayúsculas): *"Your username is invalid!"* |
-| **Obtenido** | Flash error con ese mensaje ✅ |
+| **Obtenido** | Flash error con ese mensaje (OK) |
 
 **Datos escritos en los inputs (antes de enviar):**
 
@@ -547,7 +546,7 @@ Cada escenario se documenta con **dos capturas**: los datos escritos en el formu
 |---|---|
 | **Datos usados** | `tomsmith` / `clave_incorrecta_del_taller` |
 | **Esperado** | Flash *error* *"Your password is invalid!"* |
-| **Obtenido** | Flash error con ese mensaje ✅ |
+| **Obtenido** | Flash error con ese mensaje (OK) |
 
 **Datos escritos en los inputs (antes de enviar):**
 
@@ -565,7 +564,7 @@ Cuando una prueba E2E **falla**, el wrapper `withEvidence` ejecuta automáticame
 |---|---|
 | **Disparador** | Aserción deliberadamente fallida tras intentar login con contraseña incorrecta |
 | **Mecanismo** | `try { escenario } catch { captureScreenshot(driver, nombre) }` dentro de `withEvidence` |
-| **Resultado** | Captura guardada + traza `📷 Evidencia del fallo: <ruta>` en la consola ✅ |
+| **Resultado** | Captura guardada + traza `Evidencia del fallo: <ruta>` en la consola (OK) |
 
 ![Evidencia automática de un fallo](evidence/screenshots/07-fallo-intencional-evidencia_2026-11-03T22-48-54-116Z.png)
 
@@ -583,33 +582,3 @@ En segundo lugar, la suite E2E inicial fue **flaky** (fallaba de forma intermite
 2. **Aislamiento de pruebas:** reutilizar la misma sesión de navegador entre escenarios hizo que el estado heredado provocara pérdidas silenciosas de eventos de entrada. La solución —**crear y destruir una sesión por test**— es además la práctica recomendada de la industria.
 
 Esto ilustra el verdadero valor de la automatización: una suite **confiable** funciona como red de seguridad que permite refactorear y desplegar con confianza, mientras que una suite inestable se convierte en ruido que el equipo aprende a ignorar —el peor escenario para el aseguramiento de calidad. Combinada con Docker (entorno reproducible), POM (mantenibilidad ante cambios de UI) y buenas prácticas SOLID, la automatización deja de ser un gasto para convertirse en el motor de calidad del proyecto.
-
----
-
-## 6. Indicaciones para convertir `README.md` al PDF requerido
-
-El archivo PDF debe llamarse exactamente:
-
-```text
-Taller_Scripts_Automatizados_JuanQuintero.pdf
-```
-
-**Opción A — Pandoc (recomendada, desde terminal):**
-
-```bash
-# Instalar pandoc (en Linux: sudo pacman -S pandoc texlive-most en Arch)
-pandoc README.md \
-  -o Taller_Scripts_Automatizados_JuanQuintero.pdf \
-  --pdf-engine=xelatex \
-  --resource-path=. \
-  -V geometry:margin=2.5cm \
-  -V fontsize=11pt
-```
-
-Las imágenes de `evidence/screenshots/` se incrustan automáticamente (se ejecuta desde la raíz del repositorio).
-
-**Opción B — Extensión de VS Code:** instala la extensión **Markdown PDF** (`yzhang.markdown-pdf`), abre `README.md` → clic derecho → *Markdown PDF: Export (pdf)* → renombra el archivo generado.
-
-**Opción C — Navegador:** abre `README.md` en un visor Markdown (GitHub, VS Code con vista previa) → imprimir → *Guardar como PDF*, marcando la casilla **"Gráficos de fondo"** para que se vean las capturas.
-
-**Nota final:** verifica que el PDF incluya las 11 capturas de la sección 4.11 y el nombre de archivo correcto antes de entregar.

@@ -1,0 +1,19 @@
+# Configuración APA para la generación del PDF del informe.
+# Uso: pandoc README.md --metadata-file=apa.yaml --pdf-engine=xelatex ...
+# Nota: title/author/date NO van aquí — la portada se define en portada.md
+# (si estuvieran aquí, pandoc emitiría \maketitle y habría dos portadas).
+# IMPORTANTE en header-includes: solo comandos LaTeX crudo en líneas propias.
+# Una línea que empiece con "%" (comentario LaTeX) NO funciona: pandoc la
+# trata como texto Markdown, escapa el % a \% y rompe la compilación.
+lang: es-ES
+geometry: "margin=1in"
+fontsize: 12pt
+mainfont: "Times New Roman"
+monofont: "DejaVu Sans Mono"
+linestretch: 2.0
+indent: true
+header-includes: |
+  \usepackage{indentfirst}
+  \setlength{\parindent}{0.5in}
+  \usepackage{float}
+  \floatplacement{figure}{H}
